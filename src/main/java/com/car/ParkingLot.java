@@ -22,7 +22,7 @@ public class ParkingLot {
         return true;
     }
 
-    private double getCapacityPercentage() {
+    protected double getCapacityPercentage() {
         return 100 * parkedCars.size() / this.capacity;
     }
 
@@ -38,6 +38,4 @@ public class ParkingLot {
         subscribers.add(observer);
         return getCapacityPercentage();
     }
-
-
 }
