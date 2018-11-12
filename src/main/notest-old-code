@@ -1,0 +1,147 @@
+package com.car;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
+
+public class Parking {
+
+    private static final int CAPACITY = 3;
+    private Set<Car> parkedCars = new HashSet<>();
+    private Parking nextParking;
+    private Function<Double, Boolean> policy;
+    private static final Function<Double, Boolean> DEFAULT_POLICY = (Double fullness) -> true;
+
+    public Parking() {
+        this(DEFAULT_POLICY);
+    }
+
+    public Parking(Parking nextParking) {
+        this(nextParking, DEFAULT_POLICY);
+    }
+
+    public Parking(Function<Double, Boolean> policy) {
+        this(null, policy);
+    }
+
+    public Parking(Parking parking, Function<Double, Boolean> policy) {
+        this.nextParking = parking;
+        this.policy = policy;
+    }
+
+    public boolean park(Car car) {
+        if (parkedCars.size() == CAPACITY || !policy.apply((double)parkedCars.size()/CAPACITY)) {
+            return parkInNextParking(car);
+        }
+        parkedCars.add(car);
+        return true;
+    }
+
+    public boolean retrieve(Car car) {
+        boolean isRetrieved = parkedCars.remove(car);
+        return isRetrieved || retrieveFromNextParking(car);
+    }
+
+    private boolean parkInNextParking(Car car) {
+        return nextParking == null ? false : nextParking.park(car);
+    }
+
+    private boolean retrieveFromNextParking(Car car) {
+        return nextParking == null ? false : nextParking.retrieve(car);
+    }
+}
+
+
+
+package com.car;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.function.Function;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class ParkingTest {
+
+    @Test
+    public void shouldParkACar() {
+        Parking parking = new Parking();
+        Car car = new Car();
+
+        parking.park(car);
+        assertEquals(parking.park(car), true);
+    }
+
+    @Test
+    public void shouldNotParkACarWhenItsFull() {
+        Parking parking = new Parking();
+        parking.park(new Car());
+        parking.park(new Car());
+        parking.park(new Car());
+        assertEquals(parking.park(new Car()), false);
+    }
+
+    @Test
+    void shouldRetrieveCar(){
+        Car car = new Car();
+        Parking parking = new Parking();
+        parking.park(car);
+
+        assertEquals(parking.retrieve(car), true);
+    }
+
+    @Test
+    void shouldNotRetrieveNotParkedCar(){
+        Parking parking = new Parking();
+        assertEquals(parking.retrieve(new Car()), false);
+    }
+
+    @Test
+    void shouldParkACarInMultipleLotSpace() {
+        Parking thirdLot = new Parking();
+        Parking secondLot = new Parking(thirdLot);
+        Parking parkingSystem = new Parking(secondLot);
+
+        for (int i = 0; i < 9; i++) {
+            assertTrue(parkingSystem.park(new Car()));
+        }
+        assertFalse(parkingSystem.park(new Car()));
+    }
+
+    @Test
+    void shouldParkACarInMultipleLotSpaceWithPolicy() {
+        Function<Double, Boolean> policy = (Double fullness) -> fullness < 0.8;
+        //Function<Parking, Boolean> policy = (Parking parking) -> parking.parkedCars/parking.capacity < 0.8;
+        Parking thirdLot = new Parking(policy);
+        Parking secondLot = new Parking(thirdLot, policy);
+        Parking parkingSystem = new Parking(secondLot, policy);
+
+        for (int i = 0; i < 6; i++) {
+            assertTrue(parkingSystem.park(new Car()));
+        }
+        assertFalse(parkingSystem.park(new Car()));
+    }
+
+    @Test
+    void shouldRetrieveACarFromMultipleLotSpace() {
+        Parking thirdLot = new Parking();
+        Parking secondLot = new Parking(thirdLot);
+        Parking parkingSystem = new Parking(secondLot);
+
+        for (int i = 0; i < 8; i++) {
+            parkingSystem.park(new Car());
+        }
+        Car car = new Car();
+        parkingSystem.park(car);
+
+        assertTrue(parkingSystem.retrieve(car));
+    }
+
+}
+
+
+package com.car;
+
+public class Car {
+}
