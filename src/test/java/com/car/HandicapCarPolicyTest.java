@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class HandicapCarPolicyTest {
@@ -21,7 +23,7 @@ public class HandicapCarPolicyTest {
 
     @Test
     void shouldReturnCorrectParkingLotWhenOnlyOneParkingLotIsPassed() {
-        ParkingLot parkingLot = new ParkingLot(5);
+        ParkingLot parkingLot = new ParkingLot(3);
         Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot));
         assertEquals(parkingLot, handicapCarPolicy.applyPolicy(lots));
     }
@@ -32,9 +34,15 @@ public class HandicapCarPolicyTest {
         ParkingLot parkingLotSmall = new ParkingLot(1);
         ParkingLot parkingLot100CapacityPercentage = new ParkingLot(1);
         parkingLot100CapacityPercentage.park(new Car("Handicap"));
-        Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage,parkingLotSmall, parkingLot));
-        assertEquals(parkingLotSmall, handicapCarPolicy.applyPolicy(lots));
+        Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage, parkingLot, parkingLotSmall));
+        assertEquals(parkingLot, handicapCarPolicy.applyPolicy(lots));
     }
 
-
+    @Test
+    void shouldReturnExceptionWhenNoParkingLotsAreFound() {
+        ParkingLot parkingLot100CapacityPercentage = new ParkingLot(1);
+        parkingLot100CapacityPercentage.park(new Car("Regular"));
+        Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage));
+        assertThrows(NoSuchElementException.class, () -> handicapCarPolicy.applyPolicy(lots));
+    }
 }

@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LargeCarPolicyTest {
 
@@ -33,8 +35,5 @@ public class LargeCarPolicyTest {
         Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot, parkingLotWithLessCars));
         assertEquals(parkingLotWithLessCars, largeCarPolicy.applyPolicy(lots));
     }
-
-
-
 
 }
