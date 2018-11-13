@@ -26,9 +26,8 @@ public class Attendant implements Observer {
 
     public boolean parkCar(Car car) {
          CarPolicy carPolicy = CarPolicyFactory.getPolicy(car);
-        // ParkingLot parkingLot = carPolicy.getParking(parkingLots);
+        // ParkingLot parkingLot = carPolicy.applyPolicy(parkingLots);
         // parkingLot.park(car);
-//        return car.isLarge ? parkLargeCar(car) : parkRegularCar(car);
         return true;
     }
 

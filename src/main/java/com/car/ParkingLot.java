@@ -38,4 +38,8 @@ public class ParkingLot {
         subscribers.add(observer);
         return getCapacityPercentage();
     }
+
+    public int getParkedCars() {
+        return parkedCars.size();
+    }
 }
