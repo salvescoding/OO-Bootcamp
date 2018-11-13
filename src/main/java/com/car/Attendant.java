@@ -1,8 +1,6 @@
 package com.car;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Attendant implements Observer {
     private final Map<ParkingLot, Double> parkingLots;
@@ -25,38 +23,16 @@ public class Attendant implements Observer {
     }
 
     public boolean parkCar(Car car) {
-         CarPolicy carPolicy = CarPolicyFactory.getPolicy(car);
-        // ParkingLot parkingLot = carPolicy.applyPolicy(parkingLots);
-        // parkingLot.park(car);
-        return true;
-    }
-
-    private boolean parkLargeCar(Car car) {
-        ParkingLot parkingLotWithLessCars = null;
-        for (ParkingLot p : parkingLots.keySet()) {
-            if(parkingLotWithLessCars == null){
-                parkingLotWithLessCars = p;
-            }else if(p.parkedCars.size() < parkingLotWithLessCars.parkedCars.size()){
-                parkingLotWithLessCars = p;
-            }
+        CarPolicy carPolicy = CarPolicyFactory.getPolicy(car);
+        Set<ParkingLot> setParkingLots= new HashSet<>(this.parkingLots.keySet());
+        try {
+            ParkingLot parkingLotToPark = carPolicy.applyPolicy(setParkingLots);
+            parkingLotToPark.park(car);
+            return true;
+        } catch (NoSuchElementException e) {
+            System.out.println("No Parking Lots Available");
+            return false;
         }
-        parkingLotWithLessCars.park(car);
-        return true;
-    }
-
-    private boolean parkRegularCar(Car car) {
-        for (ParkingLot p : parkingLots.keySet()) {
-            Double currentCapacityPercentage = this.parkingLots.get(p);
-//            if (currentCapacityPercentage < 100.0 && car.isHandicap) {
-//                p.park(car);
-//                return true;
-//            }
-//            if (currentCapacityPercentage < maxCapacityPercentage) {
-//                p.park(car);
-//                return true;
-//            }
-        }
-        return false;
     }
 
     @Override

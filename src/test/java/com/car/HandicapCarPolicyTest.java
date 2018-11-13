@@ -34,6 +34,7 @@ public class HandicapCarPolicyTest {
         parkingLot100CapacityPercentage.park(new Car("Handicap"));
         Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage,parkingLotSmall, parkingLot));
         assertEquals(parkingLotSmall, handicapCarPolicy.applyPolicy(lots));
-
     }
+
+
 }
