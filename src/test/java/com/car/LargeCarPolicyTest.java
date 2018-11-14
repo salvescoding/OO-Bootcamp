@@ -36,4 +36,12 @@ public class LargeCarPolicyTest {
         assertEquals(parkingLotWithLessCars, largeCarPolicy.applyPolicy(lots));
     }
 
+    @Test
+    void shouldReturnExceptionWhenNoParkingLotsAreFound() {
+        ParkingLot parkingLot100CapacityPercentage = new ParkingLot(1);
+        parkingLot100CapacityPercentage.park(new Car("Regular"));
+        Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage));
+        assertThrows(NoSuchElementException.class, () -> largeCarPolicy.applyPolicy(lots));
+    }
+
 }

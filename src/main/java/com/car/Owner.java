@@ -45,7 +45,7 @@ public class Owner implements Observer {
         return parkingLot;
     }
 
-    public ParkingLot getParkingLotToExtend(ParkingLot parkingLot) {
+    private ParkingLot getParkingLotToExtend(ParkingLot parkingLot) {
         return parkingLot;
     }
 

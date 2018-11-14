@@ -24,7 +24,7 @@ public class Attendant implements Observer {
 
     public boolean parkCar(Car car) {
         CarPolicy carPolicy = CarPolicyFactory.getPolicy(car);
-        Set<ParkingLot> setParkingLots= new HashSet<>(this.parkingLots.keySet());
+        Set<ParkingLot> setParkingLots = getParkingLots();
         try {
             ParkingLot parkingLotToPark = carPolicy.applyPolicy(setParkingLots);
             parkingLotToPark.park(car);
@@ -33,6 +33,10 @@ public class Attendant implements Observer {
             System.out.println("No Parking Lots Available");
             return false;
         }
+    }
+
+    protected Set<ParkingLot> getParkingLots() {
+        return new HashSet<>(this.parkingLots.keySet());
     }
 
     @Override

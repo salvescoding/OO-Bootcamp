@@ -1,26 +1,36 @@
 package com.car;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 
 public class ParkingSystemIntegrationTest {
 
-    @Test
-    void shouldParkTheCarInAParkingLotIfLessThen80Percent() {
-        ParkingLot parkingLot = new ParkingLot(5);
-        Set<ParkingLot> lots = new HashSet<ParkingLot>(Arrays.asList(parkingLot));
-        Attendant attendant = new Attendant(lots, 80);
+    private RegularCarPolicy regularCarPolicy;
+    private CarPolicyFactory carPolicyFactory;
+    private Car car;
+    private Attendant attendant;
 
-        assertTrue(attendant.parkCar(new Car("Regular")));
-        assertTrue(attendant.parkCar(new Car("Regular")));
-        assertTrue(attendant.parkCar(new Car("Regular")));
-        assertTrue(attendant.parkCar(new Car("Regular")));
-        assertFalse(attendant.parkCar(new Car("Regular")));
+
+    @BeforeEach
+    void setUp() {
+        regularCarPolicy = mock(RegularCarPolicy.class);
+        carPolicyFactory = mock(CarPolicyFactory.class);
+        car = mock(Car.class);
+        attendant = mock(Attendant.class);
     }
+
+    @Test
+    void shouldGetPolicyWhenAttendantParkCar() {
+        attendant.parkCar(car);
+        verify(carPolicyFactory).getPolicy(car);
+    }
+
 }

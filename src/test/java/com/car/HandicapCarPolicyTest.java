@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -29,13 +30,12 @@ public class HandicapCarPolicyTest {
     }
 
     @Test
-    void shouldReturnCorrectParkingLotWhenThreeParkingLotsArePassed() {
+    void shouldReturnCorrectParkingLotWhenTwoParkingLotsArePassed() {
         ParkingLot parkingLot = new ParkingLot(5);
-        ParkingLot parkingLotSmall = new ParkingLot(1);
         ParkingLot parkingLot100CapacityPercentage = new ParkingLot(1);
         parkingLot100CapacityPercentage.park(new Car("Handicap"));
-        Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage, parkingLot, parkingLotSmall));
-        assertEquals(parkingLot, handicapCarPolicy.applyPolicy(lots));
+        Set<ParkingLot> lots = new HashSet<>(Arrays.asList(parkingLot100CapacityPercentage, parkingLot));
+        assertNotEquals(parkingLot100CapacityPercentage, handicapCarPolicy.applyPolicy(lots));
     }
 
     @Test
