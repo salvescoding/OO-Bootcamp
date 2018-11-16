@@ -41,17 +41,6 @@ public class AttendantTest {
         assertFalse(attendant.parkCar(car3));
     }
 
-    @Test
-    void shouldNotBeAbleToParkCarInMoreThanOneParkingLot() {
-        ParkingLot parkingLot1 = new ParkingLot(1);
-        ParkingLot parkingLot2 = new ParkingLot(1);
-        Attendant attendant = new Attendant(new HashSet<ParkingLot>(Arrays.asList(parkingLot1, parkingLot2)));
-        Car car = new Car("Regular");
-
-        assertTrue(attendant.parkCar(car));
-        assertTrue(parkingLot1.retrieve(car));
-        assertFalse(parkingLot2.retrieve(car));
-    }
 
     @Test
     void shouldParkTheCarInAParkingLotIfLessThen80Percent() {
